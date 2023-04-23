@@ -2,6 +2,7 @@ package pro.sky.entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "shelter")
@@ -16,7 +17,7 @@ public class Shelter {
     @ManyToOne
     @JoinColumn(name = "pet_type")
     private PetType petType;
-    @OneToMany(mappedBy = "shelter_id")
+    @OneToMany(mappedBy = "shelter")
     private Set<Volunteer> volunteerSet = new HashSet<>();
 
 }
