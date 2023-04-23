@@ -4,6 +4,8 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import org.slf4j.Logger;
@@ -33,30 +35,30 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     public int process(List<Update> updates) {
         try {
             updates.forEach(update -> {
-                logger.info("Handles update: " + update);
+                logger.info("Обработан update: " + update);
 
                 Message message = update.message();
                 Long chatId = message.chat().id();
                 String text = message.text();
 
-                if ("/start".equals(text)) {
-                    sendMessage(chatId, "Привет! Это бот приюта для животных из Астаны. " +
-                            "Я отвечу на твои вопросы и расскажу, как забрать животное к себе домой. \n" +
-                            "Для начала выбери приют. \n" +
-                            "Нажми 1, если интересует приют для кошек, и 2 — приют для собак. \n" +
-                            "Выбрать оба приюта нельзя.");
-                } else if (text != null) {
-                    if (text.equals("1")) {
-
-                    }
-                    if (text.equals("2")) {
-
-                    } else {
+                if (update.message() != null && update.message().text().startsWith("/start")) {
+                    InlineKeyboardButton catShelter = new InlineKeyboardButton("Приют для кошек").callbackData("/catShelter");
+                    InlineKeyboardButton dogShelter = new InlineKeyboardButton("Приют для собак").callbackData("/dogShelter");
+                    InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup(catShelter, dogShelter);
+                    this.telegramBot.execute(new SendMessage(chatId, """
+                            Привет! Это бот приюта для животных из Астаны. 
+                            Я отвечу на твои вопросы и расскажу, как забрать животное к себе домой.\n
+                            Для начала выбери приют. Выбрать оба нельзя. \n
+                            Чтобы увидеть клавиатуру, отправь /keyboard боту.""").replyMarkup(keyboard));
+                } else {
                         sendMessage(chatId, "Некорректный формат сообщения!");
-                    }
                 }
-
-            });
+                if (update.callbackQuery().data().startsWith("/catShelter")) {
+                    this.telegramBot.execute(new SendMessage(update.callbackQuery().from().id(), "Выбран приют для кошек"));
+                } else {
+                    this.telegramBot.execute(new SendMessage(update.callbackQuery().from().id(), "Выбран приют для собак"));
+                }
+                });
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -67,7 +69,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         SendMessage sendMessage = new SendMessage(chatId, message);
         SendResponse sendResponse = telegramBot.execute(sendMessage);
         if (!sendResponse.isOk()) {
-            logger.error("Sending message error: " + sendResponse.description());
+            logger.error("Ошибка отправки сообщения: " + sendResponse.description());
         }
     }
 }
