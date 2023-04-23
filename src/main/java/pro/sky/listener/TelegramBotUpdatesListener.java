@@ -15,9 +15,15 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.List;
 
+/**
+ * Класс для обработки сообщений (апдейтов), поступающих от пользователей в Telegram-бот.
+ */
 @Component
 public class TelegramBotUpdatesListener implements UpdatesListener {
 
+    /**
+     * Переменная интерфейса Logger для обеспечения логирования событий, происходящих в коде.
+     */
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
     private final TelegramBot telegramBot;
 
@@ -30,7 +36,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         telegramBot.setUpdatesListener(this);
     }
 
-
+    /**
+     * Метод обрабатывает апдейт /start и дает пользователю возможность выбрать приют.
+     * @param updates список всех поступивших апдейтов.
+     * @return количество обработанных апдейтов.
+     */
     @Override
     public int process(List<Update> updates) {
         try {
@@ -65,6 +75,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 
+    /**
+     * Вспомогательный метод для отправки сообщений пользователю.
+     * Используется в методе {@link #process(List)}
+     * @param chatId id чата пользователя.
+     * @param message текст отправляемого ботом сообщения.
+     */
     private void sendMessage(Long chatId, String message) {
         SendMessage sendMessage = new SendMessage(chatId, message);
         SendResponse sendResponse = telegramBot.execute(sendMessage);
