@@ -9,7 +9,8 @@ public class Recommendation {
     private Long id;
     @Column(name = "recommendation_name")
     private String recommendationName;
+    private String description;
     @ManyToOne
-    @JoinColumn(name = "pet_type")
+    @JoinColumn(name = "pet_type_id")
     private PetType petType;
 }
