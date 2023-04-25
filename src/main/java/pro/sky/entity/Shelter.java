@@ -15,7 +15,7 @@ public class Shelter {
     @Column(name = "location_map")
     private String locationMap;
     @ManyToOne
-    @JoinColumn(name = "pet_type")
+    @JoinColumn(name = "pet_type_id")
     private PetType petType;
     @OneToMany(mappedBy = "shelter")
     private Set<Volunteer> volunteerSet = new HashSet<>();
