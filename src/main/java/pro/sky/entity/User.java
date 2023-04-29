@@ -10,7 +10,8 @@ import javax.persistence.Table;
 public class User {
     @Id
     private Long id;
+    @Column(nullable = false)
     private String name;
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 }

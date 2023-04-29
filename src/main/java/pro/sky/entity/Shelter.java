@@ -9,9 +9,14 @@ import java.util.Set;
 public class Shelter {
     @Id
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String address;
+    @Column(nullable = false)
     private String schedule;
+    @Column(nullable = false)
+    private String about;
     @Column(name = "location_map")
     private String locationMap;
     @ManyToOne

@@ -7,8 +7,9 @@ import javax.persistence.*;
 public class Recommendation {
     @Id
     private Long id;
-    @Column(name = "recommendation_name")
+    @Column(name = "recommendation_name", nullable = false)
     private String recommendationName;
+    @Column(nullable = false)
     private String description;
     @ManyToOne
     @JoinColumn(name = "pet_type_id")
