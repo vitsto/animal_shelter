@@ -1,3 +1,6 @@
 databaseChangeLog:
   - include:
       file: liquibase/data.sql
+
+  - include:
+      file: liquibase/recommendations.sql
