@@ -1,11 +1,16 @@
 package pro.sky.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "pet_type")
+@Getter
+@Setter
 public class PetType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

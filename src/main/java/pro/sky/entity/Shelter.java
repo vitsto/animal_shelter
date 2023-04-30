@@ -1,11 +1,17 @@
 package pro.sky.entity;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "shelter")
+@Getter
+@Setter
 public class Shelter {
     @Id
     private Long id;
@@ -17,6 +23,7 @@ public class Shelter {
     private String schedule;
     @Column(nullable = false)
     private String about;
+    private String guard;
     @Column(name = "location_map")
     private String locationMap;
     @ManyToOne
