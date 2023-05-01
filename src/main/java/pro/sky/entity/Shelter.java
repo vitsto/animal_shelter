@@ -31,5 +31,7 @@ public class Shelter {
     private PetType petType;
     @OneToMany(mappedBy = "shelter")
     private Set<Volunteer> volunteerSet = new HashSet<>();
+    @OneToMany(mappedBy = "shelter")
+    private Set<User> userSet = new HashSet<>();
 
 }

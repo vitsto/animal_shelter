@@ -4,6 +4,8 @@ import com.pengrad.telegrambot.request.SendMessage;
 import pro.sky.entity.Shelter;
 
 public interface ShelterService {
+//    Shelter chooseShelter(String type);
+
     SendMessage start(Shelter shelter, Long fromId);
 
     SendMessage aboutShelter(Shelter shelter, Long fromId);

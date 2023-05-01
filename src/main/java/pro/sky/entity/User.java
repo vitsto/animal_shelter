@@ -1,9 +1,6 @@
 package pro.sky.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
@@ -14,4 +11,13 @@ public class User {
     private String name;
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
+    @ManyToOne
+    @JoinColumn(name = "shelter_id")
+    private Shelter shelter;
+
+    public User(String name, String phoneNumber, Shelter shelter) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.shelter = shelter;
+    }
 }

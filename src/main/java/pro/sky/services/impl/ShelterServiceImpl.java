@@ -5,15 +5,42 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import pro.sky.entity.PetType;
 import pro.sky.entity.Shelter;
+import pro.sky.repository.PetTypeRepository;
+import pro.sky.repository.ShelterRepository;
 import pro.sky.services.ShelterService;
 
+import javax.annotation.PostConstruct;
 import java.util.Optional;
 
 /**
  * Метод для получения информации о приюте.
  */
+@Service
 public class ShelterServiceImpl implements ShelterService {
+//    @Autowired
+//    private ShelterRepository shelterRepository;
+//    @Autowired
+//    private PetTypeRepository petTypeRepository;
+//
+//    /**
+//     * Метод отвечает за выбор приюта, соответствующего определённому типу и вывод списка возможных действий.
+//     * @param type тип приюта.
+//     * @return {@link Shelter} nullable
+//     */
+//    @Override
+//    public Shelter chooseShelter(String type) {
+//        Shelter shelter = null;
+//        Optional<PetType> petType = Optional.ofNullable(petTypeRepository.findPetTypeByTypeName(type));
+//        if (petType.isPresent()) {
+//            shelter = shelterRepository.findShelterByPetTypeIs(petType.get());
+//        }
+//        return shelter;
+//    }
+
     /**
      * Стартовый метод для работы с приютом.
      * @param shelter приют.
