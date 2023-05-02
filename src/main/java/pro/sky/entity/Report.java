@@ -18,11 +18,11 @@ public class Report {
     @JoinColumn(name = "pet_id")
     private Pet pet;
 
-    @Column(name = "date_time")
+    @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
-
+    @Column(nullable = false)
     private String description;
-
+    @Column(nullable = false)
     private String photo;  //здесь будет хранится путь к фото
 
     public Report(Pet pet, LocalDateTime dateTime, String description, String photo) {
