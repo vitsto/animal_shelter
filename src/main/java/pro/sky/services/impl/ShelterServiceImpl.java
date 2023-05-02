@@ -21,25 +21,28 @@ import java.util.Optional;
  */
 @Service
 public class ShelterServiceImpl implements ShelterService {
-//    @Autowired
-//    private ShelterRepository shelterRepository;
-//    @Autowired
-//    private PetTypeRepository petTypeRepository;
-//
-//    /**
-//     * Метод отвечает за выбор приюта, соответствующего определённому типу и вывод списка возможных действий.
-//     * @param type тип приюта.
-//     * @return {@link Shelter} nullable
-//     */
-//    @Override
-//    public Shelter chooseShelter(String type) {
-//        Shelter shelter = null;
-//        Optional<PetType> petType = Optional.ofNullable(petTypeRepository.findPetTypeByTypeName(type));
-//        if (petType.isPresent()) {
-//            shelter = shelterRepository.findShelterByPetTypeIs(petType.get());
-//        }
-//        return shelter;
-//    }
+    private final ShelterRepository shelterRepository;
+    private final PetTypeRepository petTypeRepository;
+
+    public ShelterServiceImpl(ShelterRepository shelterRepository, PetTypeRepository petTypeRepository) {
+        this.shelterRepository = shelterRepository;
+        this.petTypeRepository = petTypeRepository;
+    }
+
+    /**
+     * Метод отвечает за выбор приюта, соответствующего определённому типу и вывод списка возможных действий.
+     * @param type тип приюта.
+     * @return {@link Shelter} nullable
+     */
+    @Override
+    public Shelter chooseShelter(String type) {
+        Shelter shelter = null;
+        Optional<PetType> petType = Optional.ofNullable(petTypeRepository.findPetTypeByTypeName(type));
+        if (petType.isPresent()) {
+            shelter = shelterRepository.findShelterByPetTypeIs(petType.get());
+        }
+        return shelter;
+    }
 
     /**
      * Стартовый метод для работы с приютом.

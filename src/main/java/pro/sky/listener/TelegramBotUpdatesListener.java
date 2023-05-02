@@ -8,25 +8,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pro.sky.entity.PetType;
 import pro.sky.entity.Shelter;
 import pro.sky.entity.User;
-import pro.sky.repository.PetTypeRepository;
-import pro.sky.repository.ShelterRepository;
-import pro.sky.repository.UserRepository;
 import pro.sky.services.SendMessageService;
 import pro.sky.services.ShelterService;
 import pro.sky.services.StartService;
 import pro.sky.services.UserService;
 import pro.sky.services.impl.SendMessageServiceImpl;
-import pro.sky.services.impl.ShelterServiceImpl;
 import pro.sky.services.impl.StartServiceImpl;
-import pro.sky.services.impl.UserServiceImpl;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,12 +34,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
     private final TelegramBot telegramBot;
     @Autowired
-    private ShelterRepository shelterRepository;
-    @Autowired
-    private PetTypeRepository petTypeRepository;
-    @Autowired
     private UserService userService;
-    private ShelterService shelterService = new ShelterServiceImpl();
+    @Autowired
+    private ShelterService shelterService;
     private StartService startService = new StartServiceImpl();
     private SendMessageService sendMessageService = new SendMessageServiceImpl();
     private final Pattern pattern = Pattern.compile("(\"\\D+\")\\s+(\"\\d{10,11}\")");
@@ -97,11 +87,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 case "/info" ->
                         sendResponse = !Objects.isNull(shelter) ? telegramBot.execute(shelterService.infoShelter(shelter, id)) : telegramBot.execute(sendMessageService.shelterNotChoose(id));
                 case "/catShelter" -> {
-                    shelter = chooseShelter("Cat");
+                    shelter = shelterService.chooseShelter("Cat");
                     telegramBot.execute(shelterService.start(shelter, id));
                 }
                 case "/dogShelter" -> {
-                    shelter = chooseShelter("Dog");
+                    shelter = shelterService.chooseShelter("Dog");
                     telegramBot.execute(shelterService.start(shelter, id));
                 }
                 case "/guard" ->
@@ -121,7 +111,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 default -> {
                     Matcher matcher = pattern.matcher(message);
                     if (contactFlag && matcher.find()) {
-                        userService.writeContact(new User(matcher.group(1), matcher.group(2), shelter));
+                        User user = new User(matcher.group(1), matcher.group(2), shelter);
+                        userService.writeContact(user);
                     } else {
                         telegramBot.execute(sendMessageService.commandIncorrect(id));
                     }
@@ -163,20 +154,5 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             message = update.callbackQuery().data();
         }
         return message;
-    }
-
-    /**
-     * Метод отвечает за выбор приюта, соответствующего определённому типу и вывод списка возможных действий.
-     *
-     * @param type тип приюта.
-     * @return {@link Shelter} nullable
-     */
-    public Shelter chooseShelter(String type) {
-        Shelter shelter = null;
-        Optional<PetType> petType = Optional.ofNullable(petTypeRepository.findPetTypeByTypeName(type));
-        if (petType.isPresent()) {
-            shelter = shelterRepository.findShelterByPetTypeIs(petType.get());
-        }
-        return shelter;
     }
 }
