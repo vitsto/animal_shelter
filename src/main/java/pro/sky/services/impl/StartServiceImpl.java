@@ -3,8 +3,10 @@ package pro.sky.services.impl;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
+import org.springframework.stereotype.Service;
 import pro.sky.services.StartService;
 
+@Service
 public class StartServiceImpl implements StartService {
     @Override
     public SendMessage start(Long id) {
