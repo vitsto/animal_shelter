@@ -1,10 +1,13 @@
 package pro.sky.entity;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "report")
+@Data
 public class Report {
 
     @Id
@@ -22,4 +25,14 @@ public class Report {
 
     private String photo;  //здесь будет хранится путь к фото
 
+    public Report(Pet pet, LocalDateTime dateTime, String description, String photo) {
+        this.pet = pet;
+        this.dateTime = dateTime;
+        this.description = description;
+        this.photo = photo;
+    }
+
+    public Report() {
+
+    }
 }
