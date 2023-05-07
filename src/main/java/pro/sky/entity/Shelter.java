@@ -1,9 +1,12 @@
 package pro.sky.entity;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
 @Entity
 @Table(name = "shelter")
 public class Shelter {

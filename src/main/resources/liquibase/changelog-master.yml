@@ -1,6 +1,12 @@
 databaseChangeLog:
   - include:
-      file: liquibase/data.sql
+      file: liquibase/tables.sql
 
   - include:
       file: liquibase/recommendations.sql
+
+  - include:
+      file: liquibase/volunteers.sql
+
+  - include:
+      file: liquibase/pets.sql

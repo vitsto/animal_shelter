@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface RecommendationRepository extends JpaRepository<Recommendation, Long> {
 
-//    @Query("SELECT id, recommendationName FROM Recommendation WHERE petType like %:petTypeId%")
+    @Query("FROM Recommendation WHERE petType.id = :petTypeId")
     List<Recommendation> findRecommendationsByPetType_Id(@Param("petTypeId") long petTypeId);
 }
