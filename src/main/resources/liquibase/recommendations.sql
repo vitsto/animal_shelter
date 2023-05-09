@@ -3,27 +3,27 @@
 -- changeset marina:1
 
 INSERT INTO pet_type (id, type_name)
-VALUES (1, 'dog'), (2, 'cat'), (3, 'dog-cat');
+VALUES (1, 'dog'), (2, 'cat');
 
 -- changeset marina:2
 
 INSERT INTO recommendation (recommendation_name, description, pet_type_id)
-VALUES ('Рекомендации по технике безопасности на территории приюта', 'https://clck.ru/34GgpW', 3);
+VALUES ('Рекомендации по технике безопасности на территории приюта', 'https://clck.ru/34GgpW', null);
 
 -- changeset marina:3
 
 INSERT INTO recommendation (recommendation_name, description, pet_type_id)
-VALUES ('Правила знакомства с животным до того, как забрать его из приюта', 'https://clck.ru/34Gguo', 3);
+VALUES ('Правила знакомства с животным до того, как забрать его из приюта', 'https://clck.ru/34Gguo', null);
 
 -- changeset marina:4
 
 INSERT INTO recommendation (recommendation_name, description, pet_type_id)
-VALUES ('Список документов, необходимых для того, чтобы взять животное из приюта', 'https://clck.ru/34Ggwt', 3);
+VALUES ('Список документов, необходимых для того, чтобы взять животное из приюта', 'https://clck.ru/34Ggwt', null);
 
 -- changeset marina:5
 
 INSERT INTO recommendation (recommendation_name, description, pet_type_id)
-VALUES ('Список рекомендаций по транспортировке животного', 'https://clck.ru/34Ggyv', 3);
+VALUES ('Список рекомендаций по транспортировке животного', 'https://clck.ru/34Ggyv', null);
 
 -- changeset marina:6
 
@@ -38,13 +38,13 @@ VALUES ('Список рекомендаций по обустройству д�
 -- changeset marina:8
 
 INSERT INTO recommendation (recommendation_name, description, pet_type_id)
-VALUES ('Список рекомендаций по обустройству дома для взрослого животного', 'https://clck.ru/34Gh6D', 3);
+VALUES ('Список рекомендаций по обустройству дома для взрослого животного', 'https://clck.ru/34Gh6D', null);
 
 -- changeset marina:9
 
 INSERT INTO recommendation (recommendation_name, description, pet_type_id)
 VALUES ('Список рекомендаций по обустройству дома для животного с ограниченными возможностями (зрение, передвижение)',
-        'https://clck.ru/34GhcR', 3);
+        'https://clck.ru/34GhcR', null);
 
 -- changeset marina:10
 

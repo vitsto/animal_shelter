@@ -38,7 +38,7 @@ CREATE TABLE pet (
                         id BIGSERIAL NOT NULL PRIMARY KEY,
                         pet_type_id BIGINT NOT NULL,
                         pet_name varchar(50) NOT NULL,
-                        breed varchar(16) NOT NULL,
+                        breed varchar(60) NOT NULL,
                         client_id BIGINT,
                         volunteer_id BIGINT NOT NULL
 );
@@ -92,7 +92,7 @@ CREATE TABLE recommendation (
                         id BIGSERIAL NOT NULL PRIMARY KEY,
                         recommendation_name varchar(200) NOT NULL,
                         description varchar(1000) NOT NULL,
-                        pet_type_id BIGINT NOT NULL
+                        pet_type_id BIGINT
 );
 
 -- changeset marina:14
