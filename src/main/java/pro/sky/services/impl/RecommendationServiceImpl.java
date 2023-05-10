@@ -5,11 +5,10 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Service;
+import pro.sky.entity.Shelter;
 import pro.sky.repository.RecommendationRepository;
 import pro.sky.repository.ShelterRepository;
 import pro.sky.services.RecommendationService;
-
-import java.util.HashMap;
 
 @Service
 public class RecommendationServiceImpl implements RecommendationService {
@@ -34,9 +33,9 @@ public class RecommendationServiceImpl implements RecommendationService {
      */
     @Override
     public SendMessage menuForClientConsultation(Long fromId) {
-        InlineKeyboardMarkup keyboardForConsultation = new InlineKeyboardMarkup(
-                new InlineKeyboardButton("Получить рекомендации").callbackData("/recommendations"),
-                new InlineKeyboardButton("Оставить контактные данные").callbackData("/giveDataToBot"),
+        InlineKeyboardMarkup keyboardForConsultation = new InlineKeyboardMarkup().addRow(
+                new InlineKeyboardButton("Получить рекомендации").callbackData("/recommendations")).addRow(
+                new InlineKeyboardButton("Оставить контактные данные").callbackData("/giveDataToBot")).addRow(
                 new InlineKeyboardButton("Позвать волонтёра").callbackData("/volunteer")
         );
         String message = """
@@ -52,11 +51,11 @@ public class RecommendationServiceImpl implements RecommendationService {
      * Метод получения рекомендаций в зависимости от вида приюта, выбранного пользователем.
      *
      * @param fromId идентификатор пользователя.
-     * @param clientIdToShelterId мапа для сохранения приюта, выбранного пользователем.
+     * @param shelter приют, выбранный пользователем.
      * @return {@link SendMessage}
      */
     @Override
-    public SendMessage giveRecommendation(Long fromId, HashMap<Long, Long> clientIdToShelterId) {
+    public SendMessage giveRecommendation(Long fromId, Shelter shelter) {
         InlineKeyboardButton firstMeetWithPet = new InlineKeyboardButton("Первое знакомство с животным в приюте")
                 .url("https://clck.ru/34Gguo").callbackData("/firstMeetWithPet");
         InlineKeyboardButton documentsList = new InlineKeyboardButton("Необходимые документы, чтобы взять животное из приюта")
@@ -99,12 +98,16 @@ public class RecommendationServiceImpl implements RecommendationService {
                 .addRow(gettingDisabledPet);
 
         SendMessage message = null;
-        if (!clientIdToShelterId.containsValue(2L)) {
-            message = new SendMessage(fromId, """
+
+        switch (shelter.getPetType().getTypeName()) {
+            case "dog" -> {
+                message = new SendMessage(fromId, """
                     Вот перечень рекомендаций, которые могут пригодиться.""").replyMarkup(keyboardForDogShelter);
-        } else if (!clientIdToShelterId.containsValue(1L)) {
-            message = new SendMessage(fromId, """
+            }
+            case "cat" -> {
+                message = new SendMessage(fromId, """
                     Вот перечень рекомендаций, которые могут пригодиться.""").replyMarkup(keyboardForCatShelter);
+            }
         }
         return message;
     }

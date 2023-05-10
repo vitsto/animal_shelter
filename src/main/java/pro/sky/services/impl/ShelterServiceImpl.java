@@ -37,7 +37,7 @@ public class ShelterServiceImpl implements ShelterService {
     @Override
     public Shelter chooseShelter(String type) {
         Shelter shelter = null;
-        Optional<PetType> petType = Optional.ofNullable(petTypeRepository.findPetTypeByTypeName(type));
+        Optional<PetType> petType = Optional.ofNullable(petTypeRepository.findPetTypeByTypeNameIgnoreCase(type));
         if (petType.isPresent()) {
             shelter = shelterRepository.findShelterByPetTypeIs(petType.get());
         }
@@ -138,7 +138,7 @@ public class ShelterServiceImpl implements ShelterService {
                 new InlineKeyboardButton("Как к нам попасть").callbackData("/info")
         ).addRow(
                 new InlineKeyboardButton("Контактные данные охраны").callbackData("/guard"),
-                new InlineKeyboardButton("Техника безопасности").callbackData("/safety")
+                new InlineKeyboardButton("Техника безопасности").url("https://clck.ru/34Nb7f").callbackData("/safety")
         ).addRow(
                 new InlineKeyboardButton("Свяжитесь со мной").callbackData("/contact"),
                 new InlineKeyboardButton("Позвать волонтёра").callbackData("/volunteer")
