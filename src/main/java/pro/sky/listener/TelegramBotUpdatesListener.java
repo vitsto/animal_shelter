@@ -8,16 +8,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pro.sky.entity.Client;
 import pro.sky.entity.Shelter;
 import pro.sky.entity.User;
-import pro.sky.services.SendMessageService;
-import pro.sky.services.ShelterService;
-import pro.sky.services.StartService;
-import pro.sky.services.UserService;
+import pro.sky.services.*;
 import pro.sky.services.impl.SendMessageServiceImpl;
 import pro.sky.services.impl.StartServiceImpl;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -33,10 +32,26 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      */
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
     private final TelegramBot telegramBot;
+
+    /**
+     * HashMap для сохранения выбора приюта потенциальным клиентом.
+     */
+    private static final HashMap<Long, Long> clientIdToShelterId = new HashMap<>();
     @Autowired
     private UserService userService;
     @Autowired
     private ShelterService shelterService;
+    @Autowired
+    private RecommendationService recommendationService;
+
+    @Autowired
+    private ReportService reportService;
+
+    @Autowired
+    private VolunteerService volunteerService;
+
+    @Autowired
+    private ClientService clientService;
     private StartService startService = new StartServiceImpl();
     private SendMessageService sendMessageService = new SendMessageServiceImpl();
     private final Pattern pattern = Pattern.compile("(\"\\D+\")\\s+(\"\\d{10,11}\")");
@@ -82,25 +97,41 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
             switch (message) {
                 case "/start" -> sendResponse = telegramBot.execute(startService.start(id));
+                case "/catShelter" -> {
+                    clientIdToShelterId.put(getId(update), 2L);
+                    shelter = shelterService.chooseShelter("Cat");
+                    telegramBot.execute(shelterService.giveMenu(id));
+//                    telegramBot.execute(shelterService.start(shelter, id));
+                }
+                case "/dogShelter" -> {
+                    clientIdToShelterId.put(getId(update), 1L);
+                    shelter = shelterService.chooseShelter("Dog");
+                    telegramBot.execute(shelterService.giveMenu(id));
+//                    telegramBot.execute(shelterService.start(shelter, id));
+                }
+                case "/stage1" -> {
+                    telegramBot.execute(shelterService.start(shelter, id));
+                }
+                case "/stage2" -> {
+                    telegramBot.execute(recommendationService.menuForClientConsultation(id));
+                }
+                case "/stage3" -> {
+//                    telegramBot.execute(reportService.createReport());
+                }
+
                 case "/about" ->
                         sendResponse = !Objects.isNull(shelter) ? telegramBot.execute(shelterService.aboutShelter(shelter, id)) : telegramBot.execute(sendMessageService.shelterNotChoose(id));
                 case "/info" ->
                         sendResponse = !Objects.isNull(shelter) ? telegramBot.execute(shelterService.infoShelter(shelter, id)) : telegramBot.execute(sendMessageService.shelterNotChoose(id));
-                case "/catShelter" -> {
-                    shelter = shelterService.chooseShelter("Cat");
-                    telegramBot.execute(shelterService.start(shelter, id));
-                }
-                case "/dogShelter" -> {
-                    shelter = shelterService.chooseShelter("Dog");
-                    telegramBot.execute(shelterService.start(shelter, id));
-                }
+
                 case "/guard" ->
                         sendResponse = !Objects.isNull(shelter) ? telegramBot.execute(shelterService.getGuardContact(shelter, id)) : telegramBot.execute(sendMessageService.shelterNotChoose(id));
                 case "/contact" ->
 //                        sendResponse = !Objects.isNull(shelter) ? telegramBot.execute(userService.writeContact(shelter, id)) : telegramBot.execute(incorrectMessageService.shelterNotChoose(id));
                 {
                     if (!Objects.isNull(shelter)) {
-                        telegramBot.execute(sendMessageService.send(id, "Введите контактные данные в формате: \"Фамилия Имя Отчество\" \"номер телефона\".\nК примеру: \"Иванов Иван Иванович\" \"89990001122\""));
+                        telegramBot.execute(sendMessageService.send(id,
+                                "Введите контактные данные в формате: \"Фамилия Имя Отчество\" \"номер телефона\".\nК примеру: \"Иванов Иван Иванович\" \"89990001122\""));
                         contactFlag = true;
                     } else {
                         contactFlag = false;
@@ -108,11 +139,29 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 }
 //                case "/volunteer" -> ;
 //                case "/safety" -> ;
+
                 default -> {
                     Matcher matcher = pattern.matcher(message);
                     if (contactFlag && matcher.find()) {
                         User user = new User(matcher.group(1), matcher.group(2), shelter);
                         userService.writeContact(user);
+                    } else {
+                        telegramBot.execute(sendMessageService.commandIncorrect(id));
+                    }
+                }
+
+                case "/recommendations" -> {
+                    telegramBot.execute(recommendationService.giveRecommendation(id, clientIdToShelterId));
+                }
+                case "/giveDataToBot" -> {
+                    telegramBot.execute(sendMessageService.send(id,
+                            """
+                                    Отправь боту свои фамилию, имя, телефонный номер (из 11 цифр) и адрес
+                                    в следующем формате: Иванов Иван 89991234567 Москва, ул. Дальняя, д.5, кв. 10
+                                    """));
+                    if (!message.isBlank()) {
+                        Client client = clientService.parseClientData(id, message);
+                        clientService.saveClientToRepository(client);
                     } else {
                         telegramBot.execute(sendMessageService.commandIncorrect(id));
                     }
@@ -125,10 +174,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     }
 
     /**
-     * Метод, получения идентификатора пользователя из сообщения.
+     * Метод получения идентификатора пользователя из сообщения.
      *
      * @param update сообщение, поступившее в бот.
-     * @return Long id идентификатор пользователя.
+     * @return Long id — идентификатор пользователя.
      */
     private Long getId(Update update) {
         Long id;
@@ -141,10 +190,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     }
 
     /**
-     * Получение сообщения от пользователя.
+     * Метод получения текста сообщения, отправленного пользователем в бот.
      *
      * @param update сообщение, поступившее в бот.
-     * @return String сообщение.
+     * @return message — сообщение.
      */
     private String getMessage(Update update) {
         String message = "error";

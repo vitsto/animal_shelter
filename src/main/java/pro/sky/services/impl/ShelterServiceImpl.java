@@ -5,7 +5,6 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pro.sky.entity.PetType;
 import pro.sky.entity.Shelter;
@@ -13,7 +12,7 @@ import pro.sky.repository.PetTypeRepository;
 import pro.sky.repository.ShelterRepository;
 import pro.sky.services.ShelterService;
 
-import javax.annotation.PostConstruct;
+import java.util.HashMap;
 import java.util.Optional;
 
 /**
@@ -31,6 +30,7 @@ public class ShelterServiceImpl implements ShelterService {
 
     /**
      * Метод отвечает за выбор приюта, соответствующего определённому типу и вывод списка возможных действий.
+     *
      * @param type тип приюта.
      * @return {@link Shelter} nullable
      */
@@ -45,7 +45,20 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     /**
+     * Метод вывода меню для формирования первоначального запроса пользователя.
+     *
+     * @param fromId идентификатор пользователя.
+     * @return {@link SendMessage}
+     */
+    @Override
+    public SendMessage giveMenu(Long fromId) {
+        String menu = "Выберите пункт меню:";
+        return new SendMessage(fromId, menu).replyMarkup(requestKeyboardHandler());
+    }
+
+    /**
      * Стартовый метод для работы с приютом.
+     *
      * @param shelter приют.
      * @param fromId идентификатор пользователя.
      * @return {@link SendMessage}
@@ -61,6 +74,7 @@ public class ShelterServiceImpl implements ShelterService {
 
     /**
      * Вывод информации о приюте.
+     *
      * @param shelter приют.
      * @param fromId идентификатор пользователя.
      * @return {@link SendMessage}
@@ -72,6 +86,7 @@ public class ShelterServiceImpl implements ShelterService {
 
     /**
      * Получение контактных данных охраны.
+     *
      * @param shelter приют.
      * @param fromId идентификатор пользователя.
      * @return {@link SendMessage}
@@ -85,6 +100,7 @@ public class ShelterServiceImpl implements ShelterService {
 
     /**
      * Вывод общей информации о приюте: адрес, расписание работы, схема проезда.
+     *
      * @param shelter приют.
      * @param fromId идентификатор пользователя.
      * @return {@link SendMessage}
@@ -97,7 +113,23 @@ public class ShelterServiceImpl implements ShelterService {
     }
 
     /**
-     * Клавиатура.
+     * Метод вызова клавиатуры для формирования первоначального запроса пользователя.
+     *
+     * @return клавиатура.
+     */
+    private Keyboard requestKeyboardHandler() {
+        return new InlineKeyboardMarkup().addRow(
+                new InlineKeyboardButton("Узнать информацию о приюте").callbackData("/stage1"),
+                new InlineKeyboardButton("Как взять животное из приюта").callbackData("/stage2")
+        ).addRow(
+                new InlineKeyboardButton("Прислать отчёт о питомце").callbackData("/stage3"),
+                new InlineKeyboardButton("Позвать волонтёра").callbackData("/volunteer")
+        );
+    }
+
+    /**
+     * Клавиатура для консультации нового пользователя.
+     *
      * @return {@link Keyboard}
      */
     private Keyboard getKeyboard() {

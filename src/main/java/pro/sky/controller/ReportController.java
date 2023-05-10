@@ -5,15 +5,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import pro.sky.entity.Pet;
 import pro.sky.services.ReportService;
 import pro.sky.services.StorageService;
 
-@Controller
+@RestController
+@RequestMapping("/report")
 @Tag(name = "Контроллер формирования отчётов", description = "Обработка отчётов")
 public class ReportController {
 
