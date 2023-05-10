@@ -7,7 +7,7 @@ import pro.sky.services.SendMessageService;
 
 public class SendMessageServiceImpl implements SendMessageService {
     /**
-     * Вывод предупреждения, при попытке совершить действие над приютом, не выбрав его.
+     * Вывод предупреждения при попытке совершить действие над приютом, не выбрав его.
      *
      * @param id идентификатор пользователя.
      * @return {@link SendMessage}
@@ -35,7 +35,7 @@ public class SendMessageServiceImpl implements SendMessageService {
     /**
      * Вывод сообщения.
      *
-     * @param id   идентификатор пользователя.
+     * @param id идентификатор пользователя.
      * @param text выводимое сообщение.
      * @return {@link SendMessage}
      */

@@ -1,13 +1,18 @@
 package pro.sky.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "report")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Report {
 
     @Id
@@ -30,9 +35,5 @@ public class Report {
         this.dateTime = dateTime;
         this.description = description;
         this.photo = photo;
-    }
-
-    public Report() {
-
     }
 }
