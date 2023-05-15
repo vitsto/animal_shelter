@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.response.SendResponse;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     /**
      * HashMap для сохранения выбора приюта потенциальным клиентом.
      */
+    @Getter
     private static final HashMap<Long, Shelter> clientIdToShelter = new HashMap<>();
     @Autowired
     private UserService userService;
