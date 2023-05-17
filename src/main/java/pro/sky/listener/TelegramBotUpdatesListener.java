@@ -135,7 +135,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     }
                 }
 
-//                case "/volunteer" -> ;
+                case "/volunteer" -> {
+                    sendResponse = clientIdToShelter.containsKey(id) ? telegramBot.execute(volunteerService.callVolunteer(id, clientIdToShelter.get(id))) : telegramBot.execute(sendMessageService.shelterNotChoose(id));
+                }
 //                case "/safety" -> ;
 
                 case "/recommendations" -> {
