@@ -1,0 +1,3 @@
+databaseChangeLog:
+    - include:
+        file: liquibase/test_tables.sql
