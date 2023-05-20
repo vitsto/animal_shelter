@@ -19,6 +19,8 @@ public class Volunteer {
     private Long id;
     @Column(nullable = false)
     private String name;
+    @Column(name = "telegram_nickname", nullable = false)
+    private String telegramNickname;
 
     @ManyToOne
     @JoinColumn(name = "shelter_id")
