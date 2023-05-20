@@ -1,8 +1,6 @@
 package pro.sky.entity;
 
-import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -13,7 +11,6 @@ import java.util.Set;
 @Table(name = "shelter")
 @Getter
 @Setter
-@NoArgsConstructor
 public class Shelter {
     @Id
     private Long id;
@@ -35,5 +32,4 @@ public class Shelter {
     private Set<Volunteer> volunteerSet = new HashSet<>();
     @OneToMany(mappedBy = "shelter")
     private Set<User> userSet = new HashSet<>();
-
 }
