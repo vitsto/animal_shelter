@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Service;
 import pro.sky.entity.Shelter;
 import pro.sky.entity.Volunteer;
+import pro.sky.exception.VolunteerNotFoundException;
 import pro.sky.repository.VolunteerRepository;
 import pro.sky.services.VolunteerService;
 import java.util.Optional;
@@ -33,13 +34,7 @@ public class VolunteerServiceImpl implements VolunteerService {
         String nickname = volunteerRepository.findAllByShelter_Id(shelter.getId()).stream()
                 .map(v -> v.getTelegramNickname())
                 .findAny()
-                .toString();
-
-        //        List<String> nicknamesList = shelter.getVolunteerSet().stream()
-//                        .map(volunteer -> volunteer.getTelegramNickname())
-//                        .collect(Collectors.toList());
-//
-//        message = new SendMessage(fromId, "Вы можете связаться с волонтёрами в Telegram: " + nicknamesList);
+                .orElseThrow(() -> new VolunteerNotFoundException("Волонтёр не найден"));
 
         return new SendMessage(fromId, "Вы можете связаться с волонтёром в Telegram: " + nickname);
     }
