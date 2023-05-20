@@ -2,7 +2,7 @@
 
 ## What the project does
 
-The project is a Spring-Boot application integrated with the Telegram-bot and created for animal shelter needs.
+The project is a Spring-Boot Java-based application integrated with the Telegram-bot and created for animal shelter needs.
 
 ## Why the project is useful
 
@@ -15,3 +15,16 @@ To use this application you should install [Telegram Desktop](https://desktop.te
 ## Who maintains and contributes to the project
 
 The application was written by Stolyarov Vitaliy, Scherbakov Anton and Fomina Marina. This is a team training project within [Java-developers](https://sky.pro/courses/programming/java-developer) studying process at [Skypro online university](https://sky.pro/).
+
+## Demo
+
+
+## Technologies
+
+In this project developers used:
+- Java 17
+- Spring Boot/Web/Test
+- PostgreSQL
+- Liquibase
+- [Pengrad (Telegram Bot API)](https://github.com/pengrad/java-telegram-bot-api)
+- JUnit 5, Mockito
