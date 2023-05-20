@@ -8,6 +8,7 @@ import pro.sky.entity.PetType;
 import pro.sky.entity.Shelter;
 import pro.sky.repository.PetTypeRepository;
 import pro.sky.repository.ShelterRepository;
+
 @SpringBootTest
 public class ShelterServiceTest {
     @Autowired
@@ -22,6 +23,7 @@ public class ShelterServiceTest {
         Shelter shelter = shelterRepository.findShelterByPetTypeIs(petType);
         Assertions.assertThat(shelter.getAbout()).isNotNull();
     }
+
     @Test
     void aboutCatShelter() {
         PetType petType = petTypeRepository.findPetTypeByTypeNameIgnoreCase("cat");
