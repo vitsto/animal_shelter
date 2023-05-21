@@ -14,7 +14,7 @@ To use this application you should install [Telegram Desktop](https://desktop.te
 
 1) Create a database for your shelter (e.g. via SQL Shell).
 2) Connect this database with Spring Boot application: 
-- choose 'Database' on the right pannel in IDEA 
+- choose 'Database' on the right pannel in IDEA: 
 
 ![Снимок экрана (1243)](https://github.com/vitsto/animal_shelter/assets/111565371/a9afdb0d-9994-4ca4-aabd-fe1cdc69e954)
 
@@ -22,7 +22,11 @@ To use this application you should install [Telegram Desktop](https://desktop.te
 
 ![Снимок экрана (1245)](https://github.com/vitsto/animal_shelter/assets/111565371/7b70cc81-3a25-4110-84ca-55de21c06886)
 
-3) To create tables in the database you need to write SQL-scripts
+3) To create tables in the database you need to write your own scripts (in SQL, XML, YAML or JSON format) with [chagesets](https://docs.liquibase.com/concepts/changelogs/changeset.html) and create [changelog-file](https://docs.liquibase.com/concepts/changelogs/home.html) in main -> resources -> liquibase directories as in example below:
+
+![Снимок экрана (1247)](https://github.com/vitsto/animal_shelter/assets/111565371/21c1ffb8-6232-45f6-8bd3-53b7aa507ca1)
+
+4) How to create your Telegram Bot you may read [here](https://core.telegram.org/bots).
 
 ## Who maintains and contributes to the project
 
@@ -30,6 +34,7 @@ The application was written by Stolyarov Vitaliy, Scherbakov Anton and Fomina Ma
 
 ## Demo
 
+[To watch demo of the application.]()
 
 ## Technologies
 
