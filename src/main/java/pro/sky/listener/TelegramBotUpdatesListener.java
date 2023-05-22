@@ -2,7 +2,10 @@ package pro.sky.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.PhotoSize;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.GetFile;
+import com.pengrad.telegrambot.response.GetFileResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -10,16 +13,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pro.sky.entity.Client;
+import pro.sky.entity.Pet;
 import pro.sky.entity.Shelter;
 import pro.sky.entity.User;
+import pro.sky.exception.ClientNotFoundException;
 import pro.sky.services.*;
 import pro.sky.services.impl.SendMessageServiceImpl;
 import pro.sky.services.impl.StartServiceImpl;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,6 +58,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     @Autowired
     private VolunteerService volunteerService;
+    @Autowired
+    private StorageService storageService;
+
 
     @Autowired
     private ClientService clientService;
@@ -116,6 +126,23 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     telegramBot.execute(recommendationService.menuForClientConsultation(id));
                 }
                 case "/stage3" -> {
+                    PhotoSize[] photo = update.message().photo();
+                    String description = update.message().text();
+                    if (photo != null && description != null) {
+                        PhotoSize photoSize = photo[0];
+                        GetFileResponse execute = telegramBot.execute(new GetFile(photoSize.fileId()));
+                        Set<Pet> petSet = clientService.findClient(id).orElseThrow(ClientNotFoundException::new).getPetSet();
+                        if (petSet.size() > 1) {
+                            // как отправить сообщение пользователю чтобы он выбрал конкретного животного, и как в дальнейшем обработать этот ввод?
+                        } else {
+                            String pathToFile = storageService.store(execute.file()); //файл сохранен, вернулся путь
+                            reportService.createReport(petSet.stream().findAny().get(), description, pathToFile);
+                        }
+                    }  else if (photo != null) {
+                        // запросить описание...опять же не понимаю как отправить польз-лю сообщение и с этого момента его обрабтать
+                    } else if (description != null) {
+                        // запросить фото...опять же не понимаю как отправить польз-лю сообщение и с этого момента его обрабтать
+                    }
 //                    telegramBot.execute();
                 }
 
@@ -126,8 +153,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
                 case "/guard" ->
                         sendResponse = clientIdToShelter.containsKey(id) ? telegramBot.execute(shelterService.getGuardContact(clientIdToShelter.get(id), id)) : telegramBot.execute(sendMessageService.shelterNotChoose(id));
-                case "/contact" ->
-                {
+                case "/contact" -> {
                     if (clientIdToShelter.containsKey(id)) {
                         telegramBot.execute(sendMessageService.send(id,
                                 "Введите контактные данные в формате: \"Фамилия Имя Отчество\" \"номер телефона\".\nК примеру: \"Иванов Иван Иванович\" \"89990001122\""));
@@ -166,8 +192,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 matcher.group(2).replace("\"", ""), clientIdToShelter.get(id));
                         userService.writeContact(user);
                         telegramBot.execute(sendMessageService.send(id, "Спасибо! С Вами свяжутся"));
-                    }
-                    else if (contactClientFlag) {
+                    } else if (contactClientFlag) {
                         Client client = clientService.parseClientData(id, message);
                         clientService.saveClientToRepository(client);
                         telegramBot.execute(sendMessageService.send(id, "Спасибо! С Вами свяжутся"));

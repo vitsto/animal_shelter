@@ -33,7 +33,7 @@ public class ReportController {
     })
     @PostMapping
     public void createReport(@RequestPart Pet pet, @RequestPart(name = "file") MultipartFile image, String description) {
-        String pathToFile = storageService.store(image); //файл сохранен, вернулся путь
-        reportService.createReport(pet, description, pathToFile);
+//        String pathToFile = storageService.store(image); //файл сохранен, вернулся путь
+//        reportService.createReport(pet, description, pathToFile);
     }
 }
