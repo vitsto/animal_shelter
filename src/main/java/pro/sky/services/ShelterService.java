@@ -2,8 +2,7 @@ package pro.sky.services;
 
 import com.pengrad.telegrambot.request.SendMessage;
 import pro.sky.entity.Shelter;
-
-import java.util.HashMap;
+import java.util.Optional;
 
 public interface ShelterService {
     Shelter chooseShelter(String type);
@@ -17,4 +16,8 @@ public interface ShelterService {
     SendMessage getGuardContact(Shelter shelter, Long fromId);
 
     SendMessage infoShelter(Shelter shelter, Long fromId);
+
+    Shelter saveShelterToRepository(Shelter shelter);
+
+    Optional<Shelter> findShelter(Long id);
 }

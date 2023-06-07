@@ -12,7 +12,6 @@ import pro.sky.repository.PetTypeRepository;
 import pro.sky.repository.ShelterRepository;
 import pro.sky.services.ShelterService;
 
-import java.util.HashMap;
 import java.util.Optional;
 
 /**
@@ -145,4 +144,24 @@ public class ShelterServiceImpl implements ShelterService {
         );
     }
 
+    /**
+     * Метод сохранения данных о приюте в базу данных.
+     *
+     * @param shelter экземпляр класса {@link Shelter}
+     */
+    @Override
+    public Shelter saveShelterToRepository(Shelter shelter) {
+        shelterRepository.save(shelter);
+        return shelter;
+    }
+
+    /**
+     * Метод поиска приюта по его идентификатору.
+     *
+     * @param id идентификатор приюта.
+     */
+    @Override
+    public Optional<Shelter> findShelter(Long id) {
+        return shelterRepository.findById(id);
+    }
 }

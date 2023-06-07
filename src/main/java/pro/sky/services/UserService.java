@@ -5,7 +5,7 @@ import pro.sky.entity.User;
 import java.util.Optional;
 
 public interface UserService {
-    void writeContact(User user);
+    User writeContact(User user);
 
     Optional<User> getUser(Long id);
 }

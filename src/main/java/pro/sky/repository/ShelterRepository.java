@@ -9,7 +9,4 @@ import pro.sky.entity.Shelter;
 public interface ShelterRepository extends CrudRepository<Shelter, Long> {
     Shelter findShelterByPetTypeIs(PetType petType);
 
-    Shelter getShelterById(long id);
-
-    Shelter getShelterByPetType(PetType petType);
 }
