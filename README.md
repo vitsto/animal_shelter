@@ -34,7 +34,7 @@ The application was written by Stolyarov Vitaliy, Scherbakov Anton and Fomina Ma
 
 ## Demo
 
-[To watch demo of the application.]()
+[To watch demo of the application.](https://disk.yandex.ru/i/H8nhMPNE3yEFgw)
 
 ## Technologies
 
